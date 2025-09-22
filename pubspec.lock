@@ -26,7 +26,7 @@ packages:
     source: hosted
     version: "2.6.5"
   amplify_api_dart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: amplify_api_dart
       sha256: a33bd856fc2d4fca62b8aab6caca4edfd7017c5ead7fcd42291ee55678304213

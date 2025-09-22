@@ -1,20 +1,21 @@
 import 'package:admin_11_updated/amplifyconfiguration.dart';
-import 'package:admin_11_updated/models/ModelProvider.dart';
+import 'package:admin_11_updated/models/model_provider.dart';
 import 'package:admin_11_updated/pages/main_page.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class Auth_Page extends StatefulWidget {
-  const Auth_Page({super.key});
+class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
 
   @override
-  State<Auth_Page> createState() => _Auth_PageState();
+  State<AuthPage> createState() => _AuthPageState();
 }
 
-class _Auth_PageState extends State<Auth_Page> {
+class _AuthPageState extends State<AuthPage> {
   @override
   void initState() {
     super.initState();
@@ -36,9 +37,13 @@ class _Auth_PageState extends State<Auth_Page> {
         await Amplify.configure(amplifyconfig);
       }
     } on AmplifyAlreadyConfiguredException {
-      print('Amplify has already been configured.');
+      if (kDebugMode) {
+        print('Amplify has already been configured.');
+      }
     } catch (e) {
-      print('Error configuring Amplify: $e');
+      if (kDebugMode) {
+        print('Error configuring Amplify: $e');
+      }
     }
   }
 
@@ -65,7 +70,7 @@ class _Auth_PageState extends State<Auth_Page> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Main_Page()),
+                      MaterialPageRoute(builder: (context) => MainPage()),
                     );
                   },
                   child: Text('Go to Main Page'),
@@ -88,6 +93,7 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(

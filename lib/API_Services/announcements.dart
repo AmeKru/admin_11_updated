@@ -1,0 +1,387 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+class AnnouncementsPage extends StatefulWidget {
+  const AnnouncementsPage({super.key});
+
+  @override
+  State<AnnouncementsPage> createState() => _AnnouncementsPageState();
+}
+
+class _AnnouncementsPageState extends State<AnnouncementsPage> {
+  String news = '';
+  bool _isLoading = false;
+  final TextEditingController _newsController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<dynamic> _makeRequest(
+    String method,
+    String url, {
+    Map<String, String>? headers,
+    dynamic body,
+  }) async {
+    try {
+      http.Response response;
+
+      switch (method.toUpperCase()) {
+        case 'GET':
+          response = await http.get(Uri.parse(url), headers: headers);
+          break;
+        case 'POST':
+          response = await http.post(
+            Uri.parse(url),
+            headers: headers,
+            body: jsonEncode(body),
+          );
+          break;
+        case 'PATCH':
+          response = await http.patch(
+            Uri.parse(url),
+            headers: headers,
+            body: jsonEncode(body),
+          );
+          break;
+        case 'DELETE':
+          response = await http.delete(Uri.parse(url), headers: headers);
+          break;
+        default:
+          throw Exception('Invalid HTTP method');
+      }
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body); // Return decoded data
+      } else {
+        throw Exception('Failed request with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error during HTTP request: $e');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> getNews() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      news = '';
+
+      var data = await _makeRequest(
+        'GET',
+        // 'https://lrjwl7ccg1.execute-api.ap-southeast-2.amazonaws.com/prod/news?info=News',
+        'https://6f11dyznc2.execute-api.ap-southeast-2.amazonaws.com/prod/news?info=News',
+      );
+
+      if (kDebugMode) {
+        print("Raw data from API: $data");
+      }
+
+      if (data is Map && data.containsKey('news')) {
+        news = data['news']['S'];
+        if (kDebugMode) {
+          print("News captured: $news");
+        }
+      } else {
+        if (kDebugMode) {
+          print("Unexpected data format: $data");
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in getNews: $e");
+      }
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _deleteNews() async {
+    try {
+      await deleteData('News', 'news');
+      await _loadData();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error deleting trip: $e');
+      }
+    }
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Confirm Deletion', style: TextStyle(fontSize: 35)),
+          content: Text(
+            'Are you sure you want to delete this?',
+            style: TextStyle(fontSize: 20),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _deleteNews();
+              },
+              child: Text(
+                'Yes',
+                style: TextStyle(fontSize: 20, color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'No',
+                style: TextStyle(fontSize: 20, color: Color(0xff014689)),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> deleteData(String info, String updateKey) async {
+    // final url = Uri.parse('https://lrjwl7ccg1.execute-api.ap-southeast-2.amazonaws.com/prod/news');
+    final url = Uri.parse(
+      'https://6f11dyznc2.execute-api.ap-southeast-2.amazonaws.com/prod/news',
+    );
+
+    final body = jsonEncode({'info': info, 'updateKey': updateKey});
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Bearer YOUR_AUTH_TOKEN', // Optional: include if your API requires authorization
+        },
+        body: body,
+      );
+
+      // Check the status code and handle the response
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print('Data deleted successfully: ${response.body}');
+        }
+      } else {
+        if (kDebugMode) {
+          print('Failed to delete data. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
+        }
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error deleting data: $error');
+      }
+    }
+  }
+
+  Future<void> patchData(String info, String updateKey, String news) async {
+    // final url = Uri.parse('https://lrjwl7ccg1.execute-api.ap-southeast-2.amazonaws.com/prod/news');
+    final url = Uri.parse(
+      'https://6f11dyznc2.execute-api.ap-southeast-2.amazonaws.com/prod/news',
+    );
+
+    final body = jsonEncode({
+      'info': info,
+      'updateKey': updateKey,
+      'news': news,
+    });
+
+    try {
+      final response = await http.patch(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print('Data modified successfully: ${response.body}');
+        }
+      } else {
+        if (kDebugMode) {
+          print('Failed to modify data. Status code: ${response.statusCode}');
+
+          print('Response body: ${response.body}');
+        }
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error modifying data: $error');
+      }
+    }
+  }
+
+  void _showModifyDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        /// CHANGE: renamed to dialogContext to avoid shadowing outer context
+        return AlertDialog(
+          title: Text('Modify Announcement'),
+          content: TextField(
+            controller: _newsController,
+            decoration: InputDecoration(
+              hintText: 'Enter updated Announcement',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                /// CHANGE: Capture Navigator before any await
+                final navigator = Navigator.of(dialogContext);
+
+                if (_newsController.text.isNotEmpty) {
+                  await patchData(
+                    'Announcement',
+                    'announcement',
+                    _newsController.text,
+                  );
+                  await _loadData();
+                  setState(() {
+                    news = _newsController.text;
+                  });
+
+                  /// CHANGE: Use pre-captured navigator instead of Navigator.of(context) after await
+                  navigator.pop();
+                }
+              },
+              child: Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _loadData() async {
+    await Future.wait([getNews()]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                    Center(
+                      child: Text(
+                        'NP Announcements',
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.015,
+                    ),
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 2.0),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Text(
+                          news.isNotEmpty ? news : 'No Announcements available',
+                          style: TextStyle(fontSize: 18, color: Colors.black87),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.15,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(context);
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.delete,
+                                size: 25,
+                                color: Color(0xff014689),
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Delete',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Color(0xff014689),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _showModifyDialog();
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.add,
+                                size: 25,
+                                color: Color(0xff014689),
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Modify',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Color(0xff014689),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
+}

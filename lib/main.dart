@@ -1,4 +1,4 @@
-import 'package:admin_11_updated/pages/Auth.dart';
+import 'package:admin_11_updated/pages/auth.dart';
 import 'package:admin_11_updated/pages/main_page.dart';
 import 'package:admin_11_updated/utils/loading.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/auth',
       routes: {
         '/': (context) => Loading(),
-        '/home': (context) => Main_Page(),
-        '/auth': (context) => Auth_Page(),
+        '/home': (context) => MainPage(),
+        '/auth': (context) => AuthPage(),
       },
     );
   }

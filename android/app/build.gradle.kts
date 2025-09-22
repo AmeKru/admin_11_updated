@@ -5,44 +5,22 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-///////////////////////////////////////////////////////////////
-// Copied over from older Dokument Admin11 =>
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-// => until here
-///////////////////////////////////////////////////////////////
-
 android {
     namespace = "com.example.admin_11_updated"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
         ///////////////////////////////////////////////////////////////
         isCoreLibraryDesugaringEnabled = true
-        //^needed to compile Gradle, added as well
+        //^needed to run Gradle, added as well
         ///////////////////////////////////////////////////////////////
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
@@ -70,6 +48,7 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 } // ^needed, which is why it is added as 'true' in compileOptions
 ///////////////////////////////////////////////////////////////
+
 flutter {
     source = "../.."
 }

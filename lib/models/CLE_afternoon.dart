@@ -23,13 +23,13 @@ import 'package:amplify_core/amplify_core.dart' as amplify_core;
 
 import 'model_provider.dart';
 
-/** This is an auto generated class representing the BOOKINGDETAILS5 type in your schema. */
-class BOOKINGDETAILS5 extends amplify_core.Model {
-  static const classType = const _BOOKINGDETAILS5ModelType();
+/** This is an auto generated class representing the CLEAfternoon type in your schema. */
+class CLEAfternoon extends amplify_core.Model {
+  static const classType = const _CLEAfternoonModelType();
   final String id;
-  final String? _MRTStation;
-  final int? _TripNo;
   final String? _BusStop;
+  final int? _TripNo;
+  final int? _Count;
   final amplify_core.TemporalDateTime? _createdAt;
   final amplify_core.TemporalDateTime? _updatedAt;
 
@@ -42,13 +42,13 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
   @override
   String getId() => id;
 
-  BOOKINGDETAILS5ModelIdentifier get modelIdentifier {
-    return BOOKINGDETAILS5ModelIdentifier(id: id);
+  CLEAfternoonModelIdentifier get modelIdentifier {
+    return CLEAfternoonModelIdentifier(id: id);
   }
 
-  String get MRTStation {
+  String get BusStop {
     try {
-      return _MRTStation!;
+      return _BusStop!;
     } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
         amplify_core
@@ -78,9 +78,9 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
     }
   }
 
-  String get BusStop {
+  int get Count {
     try {
-      return _BusStop!;
+      return _Count!;
     } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
         amplify_core
@@ -102,30 +102,30 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
     return _updatedAt;
   }
 
-  const BOOKINGDETAILS5._internal({
+  const CLEAfternoon._internal({
     required this.id,
-    required MRTStation,
-    required TripNo,
     required BusStop,
+    required TripNo,
+    required Count,
     createdAt,
     updatedAt,
-  }) : _MRTStation = MRTStation,
+  }) : _BusStop = BusStop,
        _TripNo = TripNo,
-       _BusStop = BusStop,
+       _Count = Count,
        _createdAt = createdAt,
        _updatedAt = updatedAt;
 
-  factory BOOKINGDETAILS5({
+  factory CLEAfternoon({
     String? id,
-    required String MRTStation,
-    required int TripNo,
     required String BusStop,
+    required int TripNo,
+    required int Count,
   }) {
-    return BOOKINGDETAILS5._internal(
+    return CLEAfternoon._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
-      MRTStation: MRTStation,
-      TripNo: TripNo,
       BusStop: BusStop,
+      TripNo: TripNo,
+      Count: Count,
     );
   }
 
@@ -136,11 +136,11 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is BOOKINGDETAILS5 &&
+    return other is CLEAfternoon &&
         id == other.id &&
-        _MRTStation == other._MRTStation &&
+        _BusStop == other._BusStop &&
         _TripNo == other._TripNo &&
-        _BusStop == other._BusStop;
+        _Count == other._Count;
   }
 
   @override
@@ -150,13 +150,15 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
   String toString() {
     var buffer = new StringBuffer();
 
-    buffer.write("BOOKINGDETAILS5 {");
+    buffer.write("CLEAfternoon {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("MRTStation=" + "$_MRTStation" + ", ");
+    buffer.write("BusStop=" + "$_BusStop" + ", ");
     buffer.write(
       "TripNo=" + (_TripNo != null ? _TripNo.toString() : "null") + ", ",
     );
-    buffer.write("BusStop=" + "$_BusStop" + ", ");
+    buffer.write(
+      "Count=" + (_Count != null ? _Count.toString() : "null") + ", ",
+    );
     buffer.write(
       "createdAt=" + (_createdAt != null ? _createdAt.format() : "null") + ", ",
     );
@@ -168,33 +170,33 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
     return buffer.toString();
   }
 
-  BOOKINGDETAILS5 copyWith({String? MRTStation, int? TripNo, String? BusStop}) {
-    return BOOKINGDETAILS5._internal(
+  CLEAfternoon copyWith({String? BusStop, int? TripNo, int? Count}) {
+    return CLEAfternoon._internal(
       id: id,
-      MRTStation: MRTStation ?? this.MRTStation,
-      TripNo: TripNo ?? this.TripNo,
       BusStop: BusStop ?? this.BusStop,
+      TripNo: TripNo ?? this.TripNo,
+      Count: Count ?? this.Count,
     );
   }
 
-  BOOKINGDETAILS5 copyWithModelFieldValues({
-    ModelFieldValue<String>? MRTStation,
-    ModelFieldValue<int>? TripNo,
+  CLEAfternoon copyWithModelFieldValues({
     ModelFieldValue<String>? BusStop,
+    ModelFieldValue<int>? TripNo,
+    ModelFieldValue<int>? Count,
   }) {
-    return BOOKINGDETAILS5._internal(
+    return CLEAfternoon._internal(
       id: id,
-      MRTStation: MRTStation == null ? this.MRTStation : MRTStation.value,
-      TripNo: TripNo == null ? this.TripNo : TripNo.value,
       BusStop: BusStop == null ? this.BusStop : BusStop.value,
+      TripNo: TripNo == null ? this.TripNo : TripNo.value,
+      Count: Count == null ? this.Count : Count.value,
     );
   }
 
-  BOOKINGDETAILS5.fromJson(Map<String, dynamic> json)
+  CLEAfternoon.fromJson(Map<String, dynamic> json)
     : id = json['id'],
-      _MRTStation = json['MRTStation'],
-      _TripNo = (json['TripNo'] as num?)?.toInt(),
       _BusStop = json['BusStop'],
+      _TripNo = (json['TripNo'] as num?)?.toInt(),
+      _Count = (json['Count'] as num?)?.toInt(),
       _createdAt = json['createdAt'] != null
           ? amplify_core.TemporalDateTime.fromString(json['createdAt'])
           : null,
@@ -204,33 +206,33 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'MRTStation': _MRTStation,
-    'TripNo': _TripNo,
     'BusStop': _BusStop,
+    'TripNo': _TripNo,
+    'Count': _Count,
     'createdAt': _createdAt?.format(),
     'updatedAt': _updatedAt?.format(),
   };
 
   Map<String, Object?> toMap() => {
     'id': id,
-    'MRTStation': _MRTStation,
-    'TripNo': _TripNo,
     'BusStop': _BusStop,
+    'TripNo': _TripNo,
+    'Count': _Count,
     'createdAt': _createdAt,
     'updatedAt': _updatedAt,
   };
 
-  static final amplify_core.QueryModelIdentifier<BOOKINGDETAILS5ModelIdentifier>
+  static final amplify_core.QueryModelIdentifier<CLEAfternoonModelIdentifier>
   MODEL_IDENTIFIER =
-      amplify_core.QueryModelIdentifier<BOOKINGDETAILS5ModelIdentifier>();
+      amplify_core.QueryModelIdentifier<CLEAfternoonModelIdentifier>();
   static final ID = amplify_core.QueryField(fieldName: "id");
-  static final MRTSTATION = amplify_core.QueryField(fieldName: "MRTStation");
-  static final TRIPNO = amplify_core.QueryField(fieldName: "TripNo");
   static final BUSSTOP = amplify_core.QueryField(fieldName: "BusStop");
+  static final TRIPNO = amplify_core.QueryField(fieldName: "TripNo");
+  static final COUNT = amplify_core.QueryField(fieldName: "Count");
   static var schema = amplify_core.Model.defineSchema(
     define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
-      modelSchemaDefinition.name = "BOOKINGDETAILS5";
-      modelSchemaDefinition.pluralName = "BOOKINGDETAILS5s";
+      modelSchemaDefinition.name = "CLEAfternoon";
+      modelSchemaDefinition.pluralName = "CLEAfternoons";
 
       modelSchemaDefinition.authRules = [
         amplify_core.AuthRule(
@@ -248,7 +250,7 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
 
       modelSchemaDefinition.addField(
         amplify_core.ModelFieldDefinition.field(
-          key: BOOKINGDETAILS5.MRTSTATION,
+          key: CLEAfternoon.BUSSTOP,
           isRequired: true,
           ofType: amplify_core.ModelFieldType(
             amplify_core.ModelFieldTypeEnum.string,
@@ -258,7 +260,7 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
 
       modelSchemaDefinition.addField(
         amplify_core.ModelFieldDefinition.field(
-          key: BOOKINGDETAILS5.TRIPNO,
+          key: CLEAfternoon.TRIPNO,
           isRequired: true,
           ofType: amplify_core.ModelFieldType(
             amplify_core.ModelFieldTypeEnum.int,
@@ -268,10 +270,10 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
 
       modelSchemaDefinition.addField(
         amplify_core.ModelFieldDefinition.field(
-          key: BOOKINGDETAILS5.BUSSTOP,
+          key: CLEAfternoon.COUNT,
           isRequired: true,
           ofType: amplify_core.ModelFieldType(
-            amplify_core.ModelFieldTypeEnum.string,
+            amplify_core.ModelFieldTypeEnum.int,
           ),
         ),
       );
@@ -301,31 +303,30 @@ class BOOKINGDETAILS5 extends amplify_core.Model {
   );
 }
 
-class _BOOKINGDETAILS5ModelType
-    extends amplify_core.ModelType<BOOKINGDETAILS5> {
-  const _BOOKINGDETAILS5ModelType();
+class _CLEAfternoonModelType extends amplify_core.ModelType<CLEAfternoon> {
+  const _CLEAfternoonModelType();
 
   @override
-  BOOKINGDETAILS5 fromJson(Map<String, dynamic> jsonData) {
-    return BOOKINGDETAILS5.fromJson(jsonData);
+  CLEAfternoon fromJson(Map<String, dynamic> jsonData) {
+    return CLEAfternoon.fromJson(jsonData);
   }
 
   @override
   String modelName() {
-    return 'BOOKINGDETAILS5';
+    return 'CLEAfternoon';
   }
 }
 
 /**
  * This is an auto generated class representing the model identifier
- * of [BOOKINGDETAILS5] in your schema.
+ * of [CLEAfternoon] in your schema.
  */
-class BOOKINGDETAILS5ModelIdentifier
-    implements amplify_core.ModelIdentifier<BOOKINGDETAILS5> {
+class CLEAfternoonModelIdentifier
+    implements amplify_core.ModelIdentifier<CLEAfternoon> {
   final String id;
 
-  /** Create an instance of BOOKINGDETAILS5ModelIdentifier using [id] the primary key. */
-  const BOOKINGDETAILS5ModelIdentifier({required this.id});
+  /** Create an instance of CLEAfternoonModelIdentifier using [id] the primary key. */
+  const CLEAfternoonModelIdentifier({required this.id});
 
   @override
   Map<String, dynamic> serializeAsMap() => (<String, dynamic>{'id': id});
@@ -339,7 +340,7 @@ class BOOKINGDETAILS5ModelIdentifier
   String serializeAsString() => serializeAsMap().values.join('#');
 
   @override
-  String toString() => 'BOOKINGDETAILS5ModelIdentifier(id: $id)';
+  String toString() => 'CLEAfternoonModelIdentifier(id: $id)';
 
   @override
   bool operator ==(Object other) {
@@ -347,7 +348,7 @@ class BOOKINGDETAILS5ModelIdentifier
       return true;
     }
 
-    return other is BOOKINGDETAILS5ModelIdentifier && id == other.id;
+    return other is CLEAfternoonModelIdentifier && id == other.id;
   }
 
   @override

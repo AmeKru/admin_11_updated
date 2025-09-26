@@ -267,7 +267,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                               : Colors.blue[100],
                           child: Center(
                             child: Text(
-                              'News ',
+                              'Announcements',
                               style: TextStyle(
                                 color: selectedBox == 4
                                     ? Colors.white

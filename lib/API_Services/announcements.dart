@@ -232,7 +232,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     showDialog(
       context: context,
       builder: (dialogContext) {
-        /// CHANGE: renamed to dialogContext to avoid shadowing outer context
+        // renamed to dialogContext to avoid shadowing outer context
         return AlertDialog(
           title: Text('Modify Announcement'),
           content: TextField(
@@ -251,7 +251,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
             ),
             TextButton(
               onPressed: () async {
-                /// CHANGE: Capture Navigator before any await
+                // Capture Navigator before any await
                 final navigator = Navigator.of(dialogContext);
 
                 if (_newsController.text.isNotEmpty) {

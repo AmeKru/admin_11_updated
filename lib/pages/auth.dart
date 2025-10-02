@@ -1,6 +1,7 @@
 import 'package:admin_11_updated/amplifyconfiguration.dart';
 import 'package:admin_11_updated/models/model_provider.dart';
 import 'package:admin_11_updated/pages/main_page.dart';
+import 'package:admin_11_updated/utils/text_sizing.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
@@ -64,8 +65,16 @@ class _AuthPageState extends State<AuthPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('You are logged in!'),
-                SizedBox(height: 20),
+                Text(
+                  'You are logged in!',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.normal,
+                    fontSize: TextSizing.fontSizeText(context),
+                  ),
+                ),
+                SizedBox(height: TextSizing.fontSizeMiniText(context)),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -73,7 +82,15 @@ class _AuthPageState extends State<AuthPage> {
                       MaterialPageRoute(builder: (context) => MainPage()),
                     );
                   },
-                  child: Text('Go to Main Page'),
+                  child: Text(
+                    'Go to Main Page',
+                    style: TextStyle(
+                      color: Color(0xff014689),
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.bold,
+                      fontSize: TextSizing.fontSizeText(context),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -95,7 +112,7 @@ class CustomScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(TextSizing.fontSizeText(context)),
         child: SingleChildScrollView(
           child: Column(
             children: [

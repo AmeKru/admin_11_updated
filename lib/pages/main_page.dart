@@ -4,6 +4,7 @@ import 'package:admin_11_updated/pages/ngee_ann.dart';
 import 'package:admin_11_updated/pages/organization_1.dart';
 import 'package:admin_11_updated/pages/organization_2.dart';
 import 'package:admin_11_updated/pages/settings_page.dart';
+import 'package:admin_11_updated/utils/text_sizing.dart';
 import 'package:flutter/material.dart';
 
 // Main landing page of the admin app
@@ -68,6 +69,7 @@ class _MainPageState extends State<MainPage>
       backgroundColor: Colors.white,
       // Top AppBar with custom layout
       appBar: AppBar(
+        toolbarHeight: TextSizing.fontSizeHeading(context) * 2.5,
         title: Stack(
           children: [
             // Left-aligned menu icon (changes between open/close)
@@ -85,18 +87,18 @@ class _MainPageState extends State<MainPage>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.directions_bus,
                     color: Colors.white,
-                    size: 32,
+                    size: TextSizing.fontSizeHeading(context),
                   ),
-                  const SizedBox(width: 6),
+                  SizedBox(width: TextSizing.fontSizeMiniText(context)),
                   Text(
                     'MooBus Admin App',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       color: Colors.white,
-                      fontSize: 30,
+                      fontSize: TextSizing.fontSizeHeading(context),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -119,53 +121,56 @@ class _MainPageState extends State<MainPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Top spacing
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: TextSizing.fontSizeHeading(context) * 3),
 
                 // Organization selection section
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Instruction text centered
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.01,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Instruction text centered
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.01,
+                        ),
+                        Text(
+                          'Choose organization to administrate:',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            color: Colors.black,
+                            fontSize: TextSizing.fontSizeHeading(context),
+                            fontWeight: FontWeight.normal,
                           ),
-                          Text(
-                            'Choose organization to administrate:',
-                            style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: 25,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
 
-                      // Spacing before cards
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.04,
-                      ),
+                    // Spacing before cards
+                    SizedBox(height: TextSizing.fontSizeHeading(context)),
 
-                      // Organization cards
-                      _buildOrganizationCard(
-                        "Ngee Ann",
-                        NgeeAnnBusData(),
-                        context,
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      _buildOrganizationCard("Organization 2", Org1(), context),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      _buildOrganizationCard("Organization 3", Org2(), context),
-                    ],
-                  ),
+                    // Organization cards
+                    _buildOrganizationCard(
+                      "Ngee Ann",
+                      NgeeAnnBusData(),
+                      context,
+                      'images/np_logo.png',
+                    ),
+                    SizedBox(height: TextSizing.fontSizeText(context)),
+                    _buildOrganizationCard(
+                      "Organization 2",
+                      Org1(),
+                      context,
+                      'images/placeholder.png',
+                    ),
+                    SizedBox(height: TextSizing.fontSizeText(context)),
+                    _buildOrganizationCard(
+                      "Organization 3",
+                      Org2(),
+                      context,
+                      'images/placeholder.png',
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -180,19 +185,19 @@ class _MainPageState extends State<MainPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+                  SizedBox(height: TextSizing.fontSizeHeading(context)),
 
                   // Account navigation tile
                   ListTile(
                     leading: Icon(
                       Icons.account_circle,
-                      size: 40,
+                      size: TextSizing.fontSizeHeading(context),
                       color: Colors.white,
                     ),
                     title: Text(
                       "Account",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: TextSizing.fontSizeHeading(context),
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -209,19 +214,19 @@ class _MainPageState extends State<MainPage>
                     },
                   ),
 
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.008),
+                  SizedBox(height: TextSizing.fontSizeMiniText(context)),
 
                   // Settings navigation tile
                   ListTile(
                     leading: Icon(
                       Icons.settings,
-                      size: 40,
+                      size: TextSizing.fontSizeHeading(context),
                       color: Colors.white,
                     ),
                     title: Text(
                       "Settings",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: TextSizing.fontSizeHeading(context),
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -251,6 +256,7 @@ class _MainPageState extends State<MainPage>
     String name, // Display name of the organization
     Widget page, // Page to navigate to on tap
     BuildContext context,
+    String imagePath,
   ) {
     return Center(
       child: SizedBox(
@@ -259,14 +265,31 @@ class _MainPageState extends State<MainPage>
           color: Color(0xff014689), // Card background color
           child: ListTile(
             title: Center(
-              child: Text(
-                name,
-                style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Montserrat',
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipOval(
+                    child: Image.asset(
+                      imagePath,
+                      width: TextSizing.fontSizeHeading(context),
+                      height: TextSizing.fontSizeHeading(context),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(
+                    width: TextSizing.fontSizeMiniText(context),
+                    height: TextSizing.fontSizeHeading(context),
+                  ),
+                  Text(
+                    name,
+                    style: TextStyle(
+                      fontSize: TextSizing.fontSizeHeading(context),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ],
               ),
             ),
             onTap: () {

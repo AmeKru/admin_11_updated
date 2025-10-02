@@ -1,4 +1,5 @@
 // Import Flutter material components
+import 'package:admin_11_updated/utils/text_sizing.dart';
 import 'package:flutter/material.dart';
 
 // SettingsPage displays app settings and preferences
@@ -17,15 +18,19 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: Colors.white,
       // === AppBar ===
       appBar: AppBar(
-        iconTheme: const IconThemeData(
+        toolbarHeight: TextSizing.fontSizeHeading(context) * 2.5,
+        centerTitle: true,
+        iconTheme: IconThemeData(
           color: Colors.white, // CHANGED: Customize back arrow color
+          size: TextSizing.fontSizeHeading(context),
         ),
-        title: const Text(
+        title: Text(
           'Settings',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Roboto',
             fontWeight: FontWeight.bold,
+            fontSize: TextSizing.fontSizeHeading(context),
           ),
         ),
         backgroundColor: Color(0xff002345), // Custom AppBar background
@@ -38,9 +43,25 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Section title
-            const Text(
-              'Settings',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.settings,
+                  size: TextSizing.fontSizeText(context),
+                  color: Colors.black,
+                ),
+                SizedBox(width: TextSizing.fontSizeMiniText(context) * 0.5),
+                Text(
+                  'Settings',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.bold,
+                    fontSize: TextSizing.fontSizeText(context),
+                  ),
+                ),
+              ],
             ),
 
             // CHANGED: Placeholder for future settings options

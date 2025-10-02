@@ -4,6 +4,7 @@ import 'package:admin_11_updated/API_Services/bus_stops.dart';
 import 'package:admin_11_updated/API_Services/timing_cle.dart';
 import 'package:admin_11_updated/API_Services/timing_kap.dart';
 import 'package:admin_11_updated/pages/table_export.dart';
+import 'package:admin_11_updated/utils/text_sizing.dart';
 import 'package:flutter/material.dart';
 
 // Main page for displaying Ngee Ann Polytechnic bus data
@@ -61,51 +62,32 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
     return '$hour:$minute:$sec';
   }
 
-  // Generates rows for a DataTable, pairing bus times two per row
-  List<DataRow> _generateRows(List<DateTime> busTimes) {
-    List<DataRow> rows = [];
-    for (int i = 0; i < busTimes.length; i += 2) {
-      DateTime time1 = busTimes[i];
-      DateTime time2 = (i + 1 < busTimes.length)
-          ? busTimes[i + 1]
-          : DateTime.now(); // Fallback if there's no second entry
-
-      rows.add(
-        DataRow(
-          cells: [
-            // First trip number and time
-            DataCell(
-              TextButton(onPressed: () {}, child: Text('Trip ${i + 1}')),
-            ),
-            DataCell(Text(formatTime(time1))),
-
-            // Second trip number and time
-            DataCell(
-              TextButton(onPressed: () {}, child: Text('Trip ${i + 2}')),
-            ),
-            DataCell(Text(formatTime(time2))),
-          ],
-        ),
-      );
-    }
-    return rows;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blue[50],
       // === AppBar ===
       appBar: AppBar(
+        toolbarHeight: TextSizing.fontSizeHeading(context) * 2.5,
+        centerTitle: true,
         backgroundColor: Color(0xff014689),
-        title: Text(
-          'Ngee Ann Bus Data',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-          ),
+        title: Stack(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Ngee Ann Bus Data',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: TextSizing.fontSizeHeading(context),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -113,15 +95,35 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
             Navigator.pop(context); // Go back to previous screen
           },
         ),
+        actions: [
+          ClipOval(
+            child: Image.asset(
+              'images/np_logo.png',
+              width: TextSizing.fontSizeHeading(context),
+              height: TextSizing.fontSizeHeading(context),
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(
+            width: TextSizing.fontSizeText(context),
+            height: TextSizing.fontSizeHeading(context),
+          ),
+        ],
       ),
 
       // === Body ===
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 30, 15, 0),
+        padding: EdgeInsets.fromLTRB(
+          TextSizing.fontSizeMiniText(context),
+          TextSizing.fontSizeMiniText(context),
+          TextSizing.fontSizeMiniText(context),
+          TextSizing.fontSizeMiniText(context),
+        ),
         child: Column(
           children: [
             // === First Row: Timing selection buttons (KAP, CLE, Bus Stops) ===
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // KAP Timing Button
                 Expanded(
@@ -131,7 +133,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                     },
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 300),
-                      height: 60,
+                      height: TextSizing.fontSizeHeading(context) * 1.75,
                       curve: Curves.easeOutCubic, // Smooth animation curve
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(
@@ -141,7 +143,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                           // Highlight if selected, otherwise light blue
                           color: selectedBox == 1
                               ? Color(0xff014689)
-                              : Colors.blue[100],
+                              : Colors.white,
                           child: Center(
                             child: Text(
                               'KAP Timing',
@@ -149,7 +151,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                                 color: selectedBox == 1
                                     ? Colors.white
                                     : Colors.blueGrey[800],
-                                fontSize: 30,
+                                fontSize: TextSizing.fontSizeHeading(context),
                                 fontFamily: 'Roboto',
                                 fontWeight: selectedBox == 1
                                     ? FontWeight.bold
@@ -163,7 +165,9 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                   ),
                 ),
 
-                SizedBox(width: 8), // Space between buttons
+                SizedBox(
+                  width: TextSizing.fontSizeMiniText(context),
+                ), // Space between buttons
                 // CLE Timing Button
                 Expanded(
                   child: GestureDetector(
@@ -172,14 +176,14 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                     },
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 300),
-                      height: 60,
+                      height: TextSizing.fontSizeHeading(context) * 1.75,
                       curve: Curves.easeOutCubic,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Container(
                           color: selectedBox == 2
                               ? Color(0xff014689)
-                              : Colors.blue[100],
+                              : Colors.white,
                           child: Center(
                             child: Text(
                               'CLE Timing',
@@ -187,7 +191,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                                 color: selectedBox == 2
                                     ? Colors.white
                                     : Colors.blueGrey[800],
-                                fontSize: 30,
+                                fontSize: TextSizing.fontSizeHeading(context),
                                 fontFamily: 'Roboto',
                                 fontWeight: selectedBox == 2
                                     ? FontWeight.bold
@@ -201,7 +205,9 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                   ),
                 ),
 
-                SizedBox(width: 10), // Space between buttons
+                SizedBox(
+                  width: TextSizing.fontSizeMiniText(context),
+                ), // Space between buttons
                 // Bus Stops Button
                 Expanded(
                   child: GestureDetector(
@@ -210,14 +216,14 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                     },
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 300),
-                      height: 60,
+                      height: TextSizing.fontSizeHeading(context) * 1.75,
                       curve: Curves.easeOutCubic,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Container(
                           color: selectedBox == 3
                               ? Color(0xff014689)
-                              : Colors.blue[100],
+                              : Colors.white,
                           child: Center(
                             child: Text(
                               'Bus Stops',
@@ -225,7 +231,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                                 color: selectedBox == 3
                                     ? Colors.white
                                     : Colors.blueGrey[800],
-                                fontSize: 30,
+                                fontSize: TextSizing.fontSizeHeading(context),
                                 fontFamily: 'Roboto',
                                 fontWeight: selectedBox == 3
                                     ? FontWeight.bold
@@ -242,12 +248,12 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
             ),
 
             // === Second Row: News & Download Section ===
-            SizedBox(height: 10), // Add some spacing between rows
+            SizedBox(
+              height: TextSizing.fontSizeMiniText(context),
+            ), // Add some spacing between rows
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Left margin to visually center the row content
-                SizedBox(width: MediaQuery.of(context).size.width * 0.2),
-
                 // News Button
                 Expanded(
                   child: GestureDetector(
@@ -256,7 +262,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                     },
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 300),
-                      height: 60,
+                      height: TextSizing.fontSizeHeading(context) * 1.75,
                       width: MediaQuery.of(context).size.width * 0.3,
                       curve: Curves.easeOutCubic,
                       child: ClipRRect(
@@ -264,7 +270,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                         child: Container(
                           color: selectedBox == 4
                               ? Color(0xff014689)
-                              : Colors.blue[100],
+                              : Colors.white,
                           child: Center(
                             child: Text(
                               'Announcements',
@@ -272,7 +278,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                                 color: selectedBox == 4
                                     ? Colors.white
                                     : Colors.blueGrey[800],
-                                fontSize: 30,
+                                fontSize: TextSizing.fontSizeHeading(context),
                                 fontFamily: 'Roboto',
                                 fontWeight: selectedBox == 4
                                     ? FontWeight.bold
@@ -287,7 +293,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                 ),
 
                 // Space between News and Download buttons
-                SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                SizedBox(width: TextSizing.fontSizeMiniText(context)),
 
                 // Download Button
                 Expanded(
@@ -297,7 +303,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                     },
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 300),
-                      height: 60,
+                      height: TextSizing.fontSizeHeading(context) * 1.75,
                       width: MediaQuery.of(context).size.width * 0.3,
                       curve: Curves.easeOutCubic,
                       child: ClipRRect(
@@ -306,7 +312,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                           // Highlight if selected, otherwise light blue
                           color: selectedBox == 5
                               ? Color(0xff014689)
-                              : Colors.blue[100],
+                              : Colors.white,
                           child: Center(
                             child: Text(
                               'Download',
@@ -314,7 +320,7 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                                 color: selectedBox == 5
                                     ? Colors.white
                                     : Colors.blueGrey[800],
-                                fontSize: 30,
+                                fontSize: TextSizing.fontSizeHeading(context),
                                 fontFamily: 'Roboto',
                                 fontWeight: selectedBox == 5
                                     ? FontWeight.bold
@@ -327,13 +333,12 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
                     ),
                   ),
                 ),
-
-                // Right margin to visually center the row content
-                SizedBox(width: MediaQuery.of(context).size.width * 0.2),
               ],
             ),
 
-            SizedBox(height: 15), // Space before content section
+            SizedBox(
+              height: TextSizing.fontSizeMiniText(context),
+            ), // Space before content section
             // === Content section based on selected item ===
             Expanded(
               child: IndexedStack(

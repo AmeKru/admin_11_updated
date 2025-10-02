@@ -1,5 +1,6 @@
 // Import necessary pages and packages
 import 'package:admin_11_updated/pages/auth.dart'; // AuthPage for post-sign-out navigation
+import 'package:admin_11_updated/utils/text_sizing.dart';
 import 'package:amplify_core/amplify_core.dart'; // Amplify Auth for sign-out functionality
 import 'package:flutter/material.dart'; // Flutter UI components
 
@@ -31,7 +32,9 @@ class _AccountPageState extends State<AccountPage> {
     } on AuthException catch (e) {
       /// CHANGE: Use the pre-captured messenger instead of ScaffoldMessenger.of(context)
       messenger.showSnackBar(
-        SnackBar(content: Text('Error signing out: ${e.message}')),
+        SnackBar(
+          content: Center(child: Text('Error signing out: ${e.message}')),
+        ),
       );
     }
   }
@@ -42,15 +45,19 @@ class _AccountPageState extends State<AccountPage> {
       backgroundColor: Colors.white,
       // === AppBar ===
       appBar: AppBar(
-        iconTheme: const IconThemeData(
+        toolbarHeight: TextSizing.fontSizeHeading(context) * 2.5,
+        centerTitle: true,
+        iconTheme: IconThemeData(
           color: Colors.white, // CHANGED: Customize back arrow color
+          size: TextSizing.fontSizeHeading(context),
         ),
-        title: const Text(
+        title: Text(
           'Account Details',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Roboto',
             fontWeight: FontWeight.bold,
+            fontSize: TextSizing.fontSizeHeading(context),
           ),
         ),
         backgroundColor: Color(0xff002345), // Custom AppBar background
@@ -58,19 +65,36 @@ class _AccountPageState extends State<AccountPage> {
 
       // === Body Content ===
       body: Padding(
-        padding: const EdgeInsets.all(16.0), // Uniform padding around content
+        padding: EdgeInsets.all(
+          TextSizing.fontSizeText(context),
+        ), // Uniform padding around content
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Section title
-            const Text(
-              'Account Details',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.account_circle,
+                  size: TextSizing.fontSizeText(context),
+                  color: Colors.black,
+                ),
+                SizedBox(width: TextSizing.fontSizeMiniText(context) * 0.5),
+                Text(
+                  'Account Details',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.bold,
+                    fontSize: TextSizing.fontSizeText(context),
+                  ),
+                ),
+              ],
             ),
 
-            const SizedBox(height: 20), // Spacing before button
-
-            const Spacer(), // Push button to bottom of screen
+            SizedBox(
+              height: TextSizing.fontSizeHeading(context) * 2,
+            ), // Spacing before button
             // === Sign Out Button ===
             Center(
               child: ElevatedButton(
@@ -79,7 +103,14 @@ class _AccountPageState extends State<AccountPage> {
                   foregroundColor: Colors.white, // Text and icon color
                 ),
                 onPressed: () => _signOut(context), // Trigger sign-out
-                child: const Text('Sign Out'),
+                child: Text(
+                  'Sign Out',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.bold,
+                    fontSize: TextSizing.fontSizeText(context),
+                  ),
+                ),
               ),
             ),
           ],

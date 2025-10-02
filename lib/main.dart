@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await BusInfo().loadData();
+  //await loadData();
   runApp(MyApp());
 }
 
@@ -16,6 +16,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Color(0xff014689), // Global cursor color
+        ),
+      ),
+
       debugShowCheckedModeBanner: false,
       initialRoute: '/auth',
       routes: {

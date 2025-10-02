@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:admin_11_updated/models/model_provider.dart';
+import 'package:admin_11_updated/utils/text_sizing.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_api_dart/amplify_api_dart.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -145,7 +146,7 @@ class _TableExportState extends State<TableExport> {
 
     /// CHANGE: Use the pre-captured messenger instead of calling ScaffoldMessenger.of(context) here
     messenger.showSnackBar(
-      SnackBar(content: Text('KAP Excel exported: $filePath')),
+      SnackBar(content: Center(child: Text('KAP Excel exported: $filePath'))),
     );
   }
 
@@ -221,7 +222,7 @@ class _TableExportState extends State<TableExport> {
 
     /// CHANGE: Use the pre-captured messenger instead of calling ScaffoldMessenger.of(context) here
     messenger.showSnackBar(
-      SnackBar(content: Text('CLE Excel exported: $filePath')),
+      SnackBar(content: Center(child: Text('CLE Excel exported: $filePath'))),
     );
   }
 
@@ -373,70 +374,129 @@ class _TableExportState extends State<TableExport> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Center(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(
-                              0xff014689,
-                            ), // Button background color
-                            foregroundColor:
-                                Colors.white, // Text (and icon) color
-                          ),
-                          onPressed: () {
-                            scanKAP();
-                            if (kDebugMode) {
-                              print('KAP Data: $afternoonKAP');
-                            } // Print the KAP data
-                            _exportKAPData(); // Then proceed with exporting the KAP data
-                          },
-                          child: Text(
-                            'Export KAP Data',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontFamily: 'Roboto',
+          ? Center(
+              child: CircularProgressIndicator(
+                strokeWidth: TextSizing.fontSizeMiniText(context) * 0.3,
+                color: Color(0xff014689),
+              ),
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.all(
+                        TextSizing.fontSizeHeading(context),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: TextSizing.fontSizeHeading(context)),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(
+                                0xff014689,
+                              ), // Button background color
+                              foregroundColor:
+                                  Colors.white, // Text (and icon) color
+                            ),
+                            onPressed: () {
+                              scanKAP();
+                              if (kDebugMode) {
+                                print('KAP Data: $afternoonKAP');
+                              } // Print the KAP data
+                              _exportKAPData(); // Then proceed with exporting the KAP data
+                            },
+                            child: SizedBox(
+                              height: TextSizing.fontSizeHeading(context) * 2,
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.upload_file_outlined,
+                                      size: TextSizing.fontSizeHeading(context),
+                                      color: Color(0xfffeb041),
+                                    ),
+                                    SizedBox(
+                                      width: TextSizing.fontSizeMiniText(
+                                        context,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Export KAP Data',
+                                      style: TextStyle(
+                                        fontSize: TextSizing.fontSizeHeading(
+                                          context,
+                                        ),
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
 
-                        SizedBox(height: 16), // Add some space between buttons
-                        // Button to export CLE data
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(
-                              0xff014689,
-                            ), // Button background color
-                            foregroundColor:
-                                Colors.white, // Text (and icon) color
-                          ),
-                          onPressed: () {
-                            scanCLE();
-                            if (kDebugMode) {
-                              print('CLE Data: $afternoonCLE');
-                            }
-                            _exportCLEData(); // Then proceed with exporting the KAP data
-                          }, // Export CLE data
-                          child: Text(
-                            'Export CLE Data',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontFamily: 'Roboto',
+                          SizedBox(
+                            height: TextSizing.fontSizeText(context),
+                          ), // Add some space between buttons
+                          // Button to export CLE data
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(
+                                0xff014689,
+                              ), // Button background color
+                              foregroundColor:
+                                  Colors.white, // Text (and icon) color
+                            ),
+                            onPressed: () {
+                              scanCLE();
+                              if (kDebugMode) {
+                                print('CLE Data: $afternoonCLE');
+                              }
+                              _exportCLEData(); // Then proceed with exporting the KAP data
+                            }, // Export CLE data
+                            child: SizedBox(
+                              height: TextSizing.fontSizeHeading(context) * 2,
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.upload_file_outlined,
+                                      size: TextSizing.fontSizeHeading(context),
+                                      color: Color(0xfffeb041),
+                                    ),
+                                    SizedBox(
+                                      width: TextSizing.fontSizeMiniText(
+                                        context,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Export CLE Data',
+                                      style: TextStyle(
+                                        fontSize: TextSizing.fontSizeHeading(
+                                          context,
+                                        ),
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
     );
   }

@@ -76,7 +76,10 @@ class _MainPageState extends State<MainPage>
             Align(
               alignment: Alignment.centerLeft,
               child: IconButton(
-                icon: Icon(_isMenuOpen ? Icons.close : Icons.menu),
+                icon: Icon(
+                  _isMenuOpen ? Icons.close : Icons.menu,
+                  size: TextSizing.fontSizeHeading(context),
+                ),
                 color: Colors.white,
                 onPressed: _toggleMenu, // Toggle menu on button press
               ),

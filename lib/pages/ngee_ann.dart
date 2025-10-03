@@ -90,7 +90,11 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
           ],
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: TextSizing.fontSizeHeading(context),
+          ),
           onPressed: () {
             Navigator.pop(context); // Go back to previous screen
           },

@@ -705,7 +705,7 @@ class _BusStopState extends State<BusStop> {
             )
           : SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.all(TextSizing.fontSizeText(context)),
+                padding: EdgeInsets.all(TextSizing.fontSizeHeading(context)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [

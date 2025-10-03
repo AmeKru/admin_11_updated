@@ -1093,11 +1093,10 @@ class _TimingKAPState extends State<TimingKAP> {
             )
           : SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.all(TextSizing.fontSizeText(context)),
+                padding: EdgeInsets.all(TextSizing.fontSizeHeading(context)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: TextSizing.fontSizeText(context)),
                     Center(
                       child: Text(
                         'KAP Morning Bus',

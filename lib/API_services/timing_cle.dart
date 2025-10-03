@@ -1097,11 +1097,10 @@ class _TimingCLEState extends State<TimingCLE> {
             )
           : SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.all(TextSizing.fontSizeText(context)),
+                padding: EdgeInsets.all(TextSizing.fontSizeHeading(context)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: TextSizing.fontSizeText(context)),
                     Center(
                       child: Text(
                         'CLE Morning Bus',

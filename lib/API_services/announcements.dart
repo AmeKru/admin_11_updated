@@ -510,20 +510,21 @@ class AnnouncementsPageState extends State<AnnouncementsPage> {
             )
           : SingleChildScrollView(
               child: Container(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(TextSizing.fontSizeHeading(context)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: TextSizing.fontSizeText(context)),
                     Center(
                       child: Container(
-                        padding: EdgeInsets.all(
-                          TextSizing.fontSizeMiniText(context) * 0.5,
+                        padding: EdgeInsets.fromLTRB(
+                          TextSizing.fontSizeHeading(context),
+                          TextSizing.fontSizeText(context),
+                          TextSizing.fontSizeHeading(context),
+                          TextSizing.fontSizeText(context),
                         ),
                         decoration: BoxDecoration(color: Color(0xfffeb041)),
                         child: Column(
                           children: [
-                            SizedBox(height: TextSizing.fontSizeText(context)),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,

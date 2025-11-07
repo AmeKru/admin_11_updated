@@ -1007,30 +1007,38 @@ class _TimingKAPState extends State<TimingKAP> {
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.directions_bus,
-                                size: TextSizing.fontSizeText(context),
-                                color: Color(0xfffeb041),
-                              ),
-                              SizedBox(
-                                width:
-                                    TextSizing.fontSizeMiniText(context) * 0.5,
-                              ),
                               TextButton(
                                 onPressed: () => _showTripOptionsDialog(
                                   context,
                                   info,
                                   timing2,
                                 ),
-                                child: Text(
-                                  'Trip ${timing2.id}',
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.directions_bus,
+                                      size: TextSizing.fontSizeText(context),
+                                      color: Color(0xfffeb041),
+                                    ),
+                                    SizedBox(
+                                      width:
+                                          TextSizing.fontSizeMiniText(context) *
+                                          0.5,
+                                    ),
+                                    Text(
+                                      'Trip ${timing2.id}',
 
-                                  style: TextStyle(
-                                    fontSize: TextSizing.fontSizeText(context),
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Roboto',
-                                    color: Colors.white,
-                                  ),
+                                      style: TextStyle(
+                                        fontSize: TextSizing.fontSizeText(
+                                          context,
+                                        ),
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Roboto',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

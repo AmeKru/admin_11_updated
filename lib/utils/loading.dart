@@ -1,42 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class Loading extends StatefulWidget {
-  const Loading({super.key});
+import '../utils/text_sizing.dart';
+
+////////////////////////////////////////////////////////////////////////////////
+/// ////////////////////////////////////////////////////////////////////////////
+/// --- loading widgets ---
+/// ////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// A full-screen loading screen widget
+// Displays a centered spinning lines animation while the app is busy
+// (e.g., during initial data load or a blocking operation)
+// The background color changes depending on whether dark mode is enabled
+
+class LoadingScreen extends StatefulWidget {
+  const LoadingScreen({super.key});
 
   @override
-  State<Loading> createState() => _LoadingState();
+  State<LoadingScreen> createState() => _LoadingScreenState();
 }
 
-class _LoadingState extends State<Loading> {
+class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.blue[200],
-        body: Center(
-          child: SpinKitSpinningLines(
-            color: Colors.white,
-            size: 80.0,
-          ),
-        )
+    return Container(
+      // Set background color
+      color: Colors.white,
+
+      // Center the loading animation in the middle of the screen
+      child: Center(
+        child: CircularProgressIndicator(
+          color: Colors.blueGrey[200]!, // Color of the wave animation
+        ), // Spinner size in logical pixels
+      ),
     );
   }
 }
 
-class LoadingScroll extends StatelessWidget {
+////////////////////////////////////////////////////////////////////////////////
+// Used when choosing a button, whilst the Bus list loads (and routes)
+// This is a smaller, inline loading indicator rather than a full-screen one
+
+class LoadingScroll extends StatefulWidget {
   const LoadingScroll({super.key});
 
+  @override
+  State<LoadingScroll> createState() => _LoadingScrollState();
+}
+
+class _LoadingScrollState extends State<LoadingScroll> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 10),
+        // Add some vertical spacing above the loader
+        SizedBox(height: TextSizing.fontSizeText(context)),
+
+        // Container to hold the loading animation
         Container(
-          color: Colors.lightBlue[100],
+          // Background color
+          color: Colors.white,
+
+          // Center the loading animation horizontally
           child: Center(
             child: SpinKitWave(
-              color: Colors.white,
-              size: 30.0,
+              color: Colors.blueGrey[200], // Color of the wave animation
+              size: TextSizing.fontSizeHeading(
+                context,
+              ), // Size of the animation
             ),
           ),
         ),
@@ -44,4 +77,3 @@ class LoadingScroll extends StatelessWidget {
     );
   }
 }
-

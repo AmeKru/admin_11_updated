@@ -1,6 +1,7 @@
 // Import necessary pages and packages
 import 'package:admin_11_updated/utils/loading.dart';
 import 'package:amplify_core/amplify_core.dart'; // Amplify Auth for sign-out functionality
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'; // Flutter UI components
 
 import '../utils/text_sizing.dart';
@@ -87,6 +88,9 @@ class _AccountPageState extends State<AccountPage> {
     });
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // alert dialog foe sign out
+
   void _showSignOutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -158,6 +162,9 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      print('Account Page built');
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       // === AppBar ===
@@ -250,7 +257,9 @@ class _AccountPageState extends State<AccountPage> {
                         width: TextSizing.fontSizeMiniText(context) * 0.5,
                       ),
                       Text(
-                        userEmail != null ? userEmail! : 'no email found :(',
+                        userEmail != null
+                            ? userEmail!
+                            : 'email could not be found :(',
                         style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Roboto',

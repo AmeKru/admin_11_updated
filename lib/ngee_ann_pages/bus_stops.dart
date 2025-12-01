@@ -1032,6 +1032,9 @@ class _BusStopState extends State<BusStop> {
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      print('BusStops built');
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: _isLoading

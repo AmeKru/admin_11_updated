@@ -1,4 +1,5 @@
 // Import service widgets for each section of the bus data page
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/text_sizing.dart';
@@ -96,6 +97,9 @@ class _NgeeAnnBusDataState extends State<NgeeAnnBusData> {
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      print('Ngee Ann page built');
+    }
     return Scaffold(
       backgroundColor: Colors.blue[50],
       // === AppBar ===

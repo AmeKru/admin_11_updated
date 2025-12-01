@@ -172,7 +172,7 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kDebugMode) {
-      print('auth_login_page_built');
+      print('Auth Login page built');
     }
     return Scaffold(
       backgroundColor: Colors.white,

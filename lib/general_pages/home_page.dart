@@ -1,4 +1,5 @@
 // Import necessary pages and Flutter material components
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../ngee_ann_pages/ngee_ann.dart';
@@ -173,6 +174,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      print('Home Page built');
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       // Top AppBar with custom layout
@@ -182,21 +186,13 @@ class _HomePageState extends State<HomePage>
         backgroundColor: const Color(0xff014689),
 
         // left aligned menu icon
-        leading: Container(
-          padding: EdgeInsetsGeometry.fromLTRB(
-            TextSizing.fontSizeText(context),
-            0,
-            0,
-            0,
+        leading: IconButton(
+          icon: Icon(
+            _isMenuOpen ? Icons.close : Icons.menu,
+            size: TextSizing.fontSizeHeading(context),
           ),
-          child: IconButton(
-            icon: Icon(
-              _isMenuOpen ? Icons.close : Icons.menu,
-              size: TextSizing.fontSizeHeading(context),
-            ),
-            color: Colors.white,
-            onPressed: _toggleMenu,
-          ),
+          color: Colors.white,
+          onPressed: _toggleMenu,
         ),
 
         // space on the right to center title more easily

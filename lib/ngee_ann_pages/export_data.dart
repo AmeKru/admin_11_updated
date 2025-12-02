@@ -511,7 +511,7 @@ class _TableExportState extends State<TableExport> {
     int toDelete = 0;
     int deleted = 0;
 
-    // Prevent re‑entrancy
+    // Prevent re‑entrance
     if (_isLoadingDelete) {
       if (kDebugMode) {
         print('Deletion already in progress; aborting new request.');
@@ -913,7 +913,7 @@ mutation DeleteBookingDetails($input: DeleteBookingDetailsInput!) {
         foregroundColor: Colors.white, // Text (and icon) color
       ),
       onPressed: () {
-        _showDeleteDialog(context);
+        _showDeleteDialog();
       },
       child: SizedBox(
         height: TextSizing.fontSizeHeading(context) * 2,
@@ -946,7 +946,7 @@ mutation DeleteBookingDetails($input: DeleteBookingDetailsInput!) {
   //////////////////////////////////////////////////////////////////////////////
   //
 
-  void _showDeleteDialog(BuildContext context) {
+  void _showDeleteDialog() {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -1089,7 +1089,7 @@ mutation DeleteBookingDetails($input: DeleteBookingDetailsInput!) {
                     ),
               SizedBox(height: TextSizing.fontSizeHeading(context) * 3),
               Text(
-                'Delete Older Data from server*',
+                'Delete Older Data from server',
                 maxLines: 1, //  limits to 1 lines
                 overflow: TextOverflow.ellipsis, // clips text if not fitting
                 style: TextStyle(
@@ -1100,7 +1100,7 @@ mutation DeleteBookingDetails($input: DeleteBookingDetailsInput!) {
                 ),
               ),
               Text(
-                '*will delete all entries of bookings and passenger counts from prior days from the server',
+                'delete all entries of bookings and passenger counts from prior days from the server',
                 softWrap: true,
                 textAlign: TextAlign.center,
                 style: TextStyle(

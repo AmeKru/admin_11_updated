@@ -63,17 +63,9 @@ class _TimingScreenState extends State<TimingScreen> {
         }
       }
 
-      // sort each list by DepartureTime
-      morning.sort(
-        (a, b) => a.DepartureTime.getDateTimeInUtc().compareTo(
-          b.DepartureTime.getDateTimeInUtc(),
-        ),
-      );
-      afternoon.sort(
-        (a, b) => a.DepartureTime.getDateTimeInUtc().compareTo(
-          b.DepartureTime.getDateTimeInUtc(),
-        ),
-      );
+      // sort each list by TripNo
+      morning.sort((a, b) => a.TripNo.compareTo(b.TripNo));
+      afternoon.sort((a, b) => a.TripNo.compareTo(b.TripNo));
 
       if (kDebugMode) {
         print('Loaded ${trips.length} trips for ${widget.station}');

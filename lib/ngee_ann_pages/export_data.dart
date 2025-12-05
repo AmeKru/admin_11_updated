@@ -422,14 +422,19 @@ class _TableExportState extends State<TableExport> {
       groupedAfternoon,
     );
 
-    // Optionally include a station/timeframe label
-    final downloadPath = await _getDownloadPath();
-    final filePath =
-        '$downloadPath/${station.toLowerCase()}_data_$dateToken.xlsx';
+    String filePath = 'Downloads/${station.toLowerCase()}_data_$dateToken.xlsx';
 
-    File(filePath)
-      ..createSync(recursive: true)
-      ..writeAsBytesSync(excel.encode()!);
+    if (kIsWeb) {
+      excel.save(fileName: '${station.toLowerCase()}_data_$dateToken.xlsx');
+    } else {
+      // Optionally include a station/timeframe label
+      final downloadPath = await _getDownloadPath();
+      filePath = '$downloadPath/${station.toLowerCase()}_data_$dateToken.xlsx';
+
+      File(filePath)
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(excel.encode()!);
+    }
 
     if (kDebugMode) {
       print('$station Excel file exported to $filePath');
@@ -442,6 +447,27 @@ class _TableExportState extends State<TableExport> {
       ),
     );
   }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // get the download path for device in use
+
+  Future<String> _getDownloadPath() async {
+    Directory? downloadsDir;
+
+    if (Platform.isAndroid) {
+      downloadsDir = Directory(
+        '/storage/emulated/0/Download',
+      ); // Downloads folder on Android
+    } else if (Platform.isIOS) {
+      downloadsDir =
+          await getApplicationDocumentsDirectory(); // For iOS, we use application documents directory
+    }
+
+    return downloadsDir!.path;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // returns a DateTime type
 
   DateTime _toDateTime(dynamic value) {
     if (value == null) return DateTime.now();
@@ -469,24 +495,6 @@ class _TableExportState extends State<TableExport> {
 
     // Last resort: parse the string representation
     return DateTime.parse(value.toString());
-  }
-
-  //////////////////////////////////////////////////////////////////////////////
-  // get the download path for device in use
-
-  Future<String> _getDownloadPath() async {
-    Directory? downloadsDir;
-
-    if (Platform.isAndroid) {
-      downloadsDir = Directory(
-        '/storage/emulated/0/Download',
-      ); // Downloads folder on Android
-    } else if (Platform.isIOS) {
-      downloadsDir =
-          await getApplicationDocumentsDirectory(); // For iOS, we use application documents directory
-    }
-
-    return downloadsDir!.path;
   }
 
   //////////////////////////////////////////////////////////////////////////////

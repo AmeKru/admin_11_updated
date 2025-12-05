@@ -768,7 +768,12 @@ class _BusStopState extends State<BusStop> {
   //////////////////////////////////////////////////////////////////////////////
   // when pressing on bus stop
 
-  void _showDescription(BuildContext context, BusStops stop) {
+  void _showDescription(
+    BuildContext context,
+    BusStops stop,
+    String title,
+    String description,
+  ) {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -777,7 +782,8 @@ class _BusStopState extends State<BusStop> {
         return AlertDialog(
           actionsAlignment: MainAxisAlignment.center,
           title: Text(
-            '${stop.BusStop} Description',
+            '${stop.BusStop} - $title',
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: TextSizing.fontSizeHeading(context),
               fontWeight: FontWeight.bold,
@@ -786,7 +792,8 @@ class _BusStopState extends State<BusStop> {
             ),
           ),
           content: Text(
-            stop.Description,
+            description,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: TextSizing.fontSizeText(context),
               fontWeight: FontWeight.normal,
@@ -835,7 +842,12 @@ class _BusStopState extends State<BusStop> {
             TextSizing.fontSizeMiniText(context) * 0.5,
           ),
           child: TextButton(
-            onPressed: () => _showDescription(context, stop),
+            onPressed: () => _showDescription(
+              context,
+              stop,
+              'Description',
+              stop.Description,
+            ),
             style: TextButton.styleFrom(
               backgroundColor: const Color(0xff014689),
               foregroundColor: Colors.white,
@@ -879,16 +891,22 @@ class _BusStopState extends State<BusStop> {
           color: Colors.blue[50],
           padding: EdgeInsets.all(TextSizing.fontSizeMiniText(context) * 0.5),
           child: TextButton(
-            onPressed: () {},
+            onPressed: () => _showDescription(
+              context,
+              stop,
+              'Bus Stop Number',
+              stop.StopNo.toString(),
+            ),
             child: Center(
-              child: Text(
-                '${stop.StopNo}',
-                maxLines: 1, //  limits to 1 lines
-                overflow: TextOverflow.ellipsis, // clips text if not fitting
-                style: TextStyle(
-                  fontSize: TextSizing.fontSizeText(context),
-                  color: Colors.black,
-                  fontFamily: 'Roboto',
+              child: FittedBox(
+                fit: BoxFit.scaleDown, // shrink text if needed
+                child: Text(
+                  '${stop.StopNo}',
+                  style: TextStyle(
+                    fontSize: TextSizing.fontSizeText(context),
+                    color: Colors.black,
+                    fontFamily: 'Roboto',
+                  ),
                 ),
               ),
             ),
@@ -900,7 +918,12 @@ class _BusStopState extends State<BusStop> {
           color: Colors.blue[100],
           padding: EdgeInsets.all(TextSizing.fontSizeMiniText(context) * 0.5),
           child: TextButton(
-            onPressed: () {},
+            onPressed: () => _showDescription(
+              context,
+              stop,
+              'Position',
+              'Lat: ${stop.Lat}\nLng: ${stop.Lon}',
+            ),
             child: Center(
               child: Text(
                 '${stop.Lat}, ${stop.Lon}',

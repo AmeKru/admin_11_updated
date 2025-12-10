@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
+import 'dart:core';
 import 'dart:io';
 
 import 'package:amplify_api/amplify_api.dart';
@@ -33,15 +33,24 @@ class _TableExportState extends State<TableExport> {
   //////////////////////////////////////////////////////////////////////////////
   // Variables
 
-  int? trackBooking;
-  List<String> busStops = [];
-  List<List<dynamic>> tableData = [];
+  // bool used as guard to prevent buttons being pressed to quickly
   bool _isLoadingExport = false;
   bool _isLoadingDelete = false;
+
+  // lists of counts at mr, bus stop and trip no
   List<Map<String, dynamic>> afternoonKAP = [];
   List<Map<String, dynamic>> afternoonCLE = [];
   List<Map<String, dynamic>> morningKAP = [];
   List<Map<String, dynamic>> morningCLE = [];
+
+  // Lists of corresponding trip times
+  List<DateTime> morningTimesKAP = [];
+  List<DateTime> morningTimesCLE = [];
+  List<DateTime> afternoonTimesKAP = [];
+  List<DateTime> afternoonTimesCLE = [];
+
+  // List of bus stops
+  List<BusStops> busStops = [];
 
   //////////////////////////////////////////////////////////////////////////////
   // init State
@@ -72,6 +81,22 @@ class _TableExportState extends State<TableExport> {
     afternoonKAP = await scanTrips('KAP', TripTimeOfDay.AFTERNOON);
     morningCLE = await scanTrips('CLE', TripTimeOfDay.MORNING);
     afternoonCLE = await scanTrips('CLE', TripTimeOfDay.AFTERNOON);
+    morningTimesKAP = await fetchTripTimes(
+      station: 'KAP',
+      timeOfDay: 'MORNING',
+    );
+    morningTimesCLE = await fetchTripTimes(
+      station: 'CLE',
+      timeOfDay: 'MORNING',
+    );
+    afternoonTimesKAP = await fetchTripTimes(
+      station: 'KAP',
+      timeOfDay: 'AFTERNOON',
+    );
+    afternoonTimesCLE = await fetchTripTimes(
+      station: 'CLE',
+      timeOfDay: 'AFTERNOON',
+    );
 
     setState(() {
       _isLoadingExport = false;
@@ -103,7 +128,7 @@ class _TableExportState extends State<TableExport> {
         busStops.clear(); // reset before adding
         for (var item in items) {
           if (item != null) {
-            busStops.add(item.BusStop); // add the BusStop string
+            busStops.add(item); // add the BusStop string
             if (kDebugMode) {
               print(
                 'BusStop: ${item.BusStop}, Lat: ${item.Lat}, Lon: ${item.Lon}',
@@ -177,6 +202,74 @@ class _TableExportState extends State<TableExport> {
   }
 
   //////////////////////////////////////////////////////////////////////////////
+  // fetch trip times for given mrt station and timeOfDay
+
+  Future<List<DateTime>> fetchTripTimes({
+    required String station,
+    required String timeOfDay, // "MORNING" or "AFTERNOON"
+  }) async {
+    final List<DateTime> loaded = [];
+    try {
+      const graphQLDocument = '''
+      query ListTrips(\$station: String!, \$timeOfDay: TripTimeOfDay!) {
+        listTripLists(
+          filter: {
+            and: [
+              { MRTStation: { eq: \$station } }
+              { TripTime: { eq: \$timeOfDay } }
+            ]
+          }
+        ) {
+          items {
+            TripNo
+            DepartureTime
+          }
+        }
+      }
+    ''';
+
+      final request = GraphQLRequest<String>(
+        document: graphQLDocument,
+        variables: {
+          'station': station,
+          'timeOfDay':
+              timeOfDay, // must be enum string: "MORNING" or "AFTERNOON"
+        },
+        authorizationMode: APIAuthorizationType.userPools, // authorized read
+      );
+
+      final response = await Amplify.API.query(request: request).response;
+
+      if (response.data != null) {
+        final data = jsonDecode(response.data!);
+        final List<dynamic> items = data['listTripLists']['items'] ?? [];
+
+        // Sort items by TripNo
+        items.sort((a, b) {
+          final aNo = a['TripNo'] as int? ?? 0;
+          final bNo = b['TripNo'] as int? ?? 0;
+          return aNo.compareTo(bNo);
+        });
+
+        for (var item in items) {
+          final departureStr = item['DepartureTime'] as String;
+
+          // Parse into UTC
+          final departureUtc = DateTime.parse(departureStr);
+
+          // Convert to Singapore time (UTC+8)
+          final departureSingapore = departureUtc.add(const Duration(hours: 8));
+
+          loaded.add(departureSingapore);
+        }
+      }
+    } catch (e) {
+      safePrint('fetchTripTimes error: $e');
+    }
+    return loaded;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
   /// //////////////////////////////////////////////////////////////////////////
   /// --- Helpers for excel sheet ---
   /// //////////////////////////////////////////////////////////////////////////
@@ -222,6 +315,7 @@ class _TableExportState extends State<TableExport> {
   void appendGroupedToWorkbook(
     Excel excel,
     Map<String, Map<int, List<Map<String, dynamic>>>> grouped,
+    List<DateTime> tripTime,
     String station,
     String tripTimeLabel,
   ) {
@@ -237,34 +331,31 @@ class _TableExportState extends State<TableExport> {
       verticalAlign: VerticalAlign.Center,
     );
 
+    final sheetName = _sanitizeSheetName("$station $tripTimeLabel");
+    final sheet = excel[sheetName];
+
+    // Header row
+    sheet.appendRow([
+      TextCellValue('MRT'),
+      TextCellValue('Date'),
+      TextCellValue('Day'),
+      TextCellValue('TripNo'),
+      TextCellValue('TripTime'),
+      TextCellValue('BusStopNo'),
+      TextCellValue('BusStop'),
+      TextCellValue('Count'),
+    ]);
+
+    // Apply header style to the last appended row ( all bold text)
+    final headerRowIndex = sheet.maxRows - 1; // zero-based index of header row
+    for (var col = 0; col < 8; col++) {
+      final cell = sheet.cell(
+        CellIndex.indexByColumnRow(columnIndex: col, rowIndex: headerRowIndex),
+      );
+      cell.cellStyle = headerStyle;
+    }
+
     grouped.forEach((date, trips) {
-      final sheetName = _sanitizeSheetName("$station $tripTimeLabel $date");
-      final sheet = excel[sheetName];
-
-      // Row: Date
-      sheet.appendRow([TextCellValue('Date:'), TextCellValue(date)]);
-      // Row: blank
-      sheet.appendRow([TextCellValue('')]);
-      // Header row
-      sheet.appendRow([
-        TextCellValue('Trip No'),
-        TextCellValue('Bus Stop'),
-        TextCellValue('Count'),
-      ]);
-
-      // Apply header style to the last appended row
-      final headerRowIndex =
-          sheet.maxRows - 1; // zero-based index of header row
-      for (var col = 0; col < 3; col++) {
-        final cell = sheet.cell(
-          CellIndex.indexByColumnRow(
-            columnIndex: col,
-            rowIndex: headerRowIndex,
-          ),
-        );
-        cell.cellStyle = headerStyle;
-      }
-
       final sortedTripNos = trips.keys.toList()..sort();
       for (final tn in sortedTripNos) {
         // Sort rows by createdAt if present
@@ -284,15 +375,31 @@ class _TableExportState extends State<TableExport> {
               ? row['count'] as int
               : int.tryParse('${row['count']}') ?? 0;
 
+          // assign trip time string, fallback to --:-- if no corresponding trip time is found
+          String tripTimeString = '';
+          if ((tn - 1) < 0 || (tn - 1) > tripTime.length - 1) {
+            tripTimeString = '--:--';
+          } else {
+            tripTimeString = _formatTripTime(tripTime[tn - 1]);
+          }
+
+          // creates row with values
           sheet.appendRow([
+            TextCellValue(station),
+            TextCellValue(date),
+            TextCellValue(getDayOfWeek(date)),
             IntCellValue(tn),
+            TextCellValue(tripTimeString),
+            IntCellValue(
+              getStopNo(busStops, row['busStop'] as String? ?? '') ?? 0,
+            ),
             TextCellValue(row['busStop'] as String? ?? ''),
             IntCellValue(countVal),
           ]);
 
           // Apply data style to the last appended row
           final dataRowIndex = sheet.maxRows - 1;
-          for (var col = 0; col < 3; col++) {
+          for (var col = 0; col < 8; col++) {
             final cell = sheet.cell(
               CellIndex.indexByColumnRow(
                 columnIndex: col,
@@ -302,11 +409,37 @@ class _TableExportState extends State<TableExport> {
             cell.cellStyle = dataStyle;
           }
         }
-
-        // spacer row
-        sheet.appendRow([TextCellValue('')]);
       }
     });
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // helper to get corresponding busStop No
+  int? getStopNo(List<BusStops> busStops, String busStopName) {
+    try {
+      return busStops.firstWhere((s) => s.BusStop == busStopName).StopNo;
+    } catch (e) {
+      return null; // if not found
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // get the day of week
+
+  String getDayOfWeek(String date) {
+    // Split by the dot separator
+    final parts = date.split('-'); // ["yyyy"-"mm"-"dd"]
+
+    // Convert each part to integer
+    final year = int.parse(parts[0]);
+    final month = int.parse(parts[1]);
+    final day = int.parse(parts[2]);
+
+    // List of all days in a week
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    // Dart's DateTime.weekday returns 1 for Monday ... 7 for Sunday
+    return days[DateTime(year, month, day).weekday - 1];
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -314,7 +447,7 @@ class _TableExportState extends State<TableExport> {
 
   String _sanitizeSheetName(String name) {
     // Excel sheet name max length is 31 and cannot contain: \ / ? * [ ]
-    var s = name.replaceAll(RegExp(r'[\\\/\?\*\[\]]'), '_');
+    var s = name.replaceAll(RegExp(r'[\\/?*\[\]]'), '_');
     if (s.length > 31) s = s.substring(0, 31);
     return s;
   }
@@ -338,6 +471,14 @@ class _TableExportState extends State<TableExport> {
   String _formatTimeForFilename(DateTime dt) {
     // Use 24h compact format HH MM SS
     return "${dt.hour.toString().padLeft(2, '0')}${dt.minute.toString().padLeft(2, '0')}${dt.second.toString().padLeft(2, '0')}";
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // format for DateTime hour minute second
+
+  String _formatTripTime(DateTime dt) {
+    // Use 24h compact format HH MM SS
+    return "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -408,8 +549,20 @@ class _TableExportState extends State<TableExport> {
 
     final excel = Excel.createExcel();
 
-    appendGroupedToWorkbook(excel, groupedMorning, station, 'MORNING');
-    appendGroupedToWorkbook(excel, groupedAfternoon, station, 'AFTERNOON');
+    appendGroupedToWorkbook(
+      excel,
+      groupedMorning,
+      station == 'KAP' ? morningTimesKAP : morningTimesCLE,
+      station,
+      'MORNING',
+    );
+    appendGroupedToWorkbook(
+      excel,
+      groupedAfternoon,
+      station == 'KAP' ? afternoonTimesKAP : afternoonTimesCLE,
+      station,
+      'AFTERNOON',
+    );
 
     // remove default sheet if present
     if (excel.sheets.containsKey('Sheet1')) {
@@ -952,7 +1105,7 @@ mutation DeleteBookingDetails($input: DeleteBookingDetailsInput!) {
   }
 
   //////////////////////////////////////////////////////////////////////////////
-  //
+  // shows dialog after pressing delete data button
 
   void _showDeleteDialog() {
     showDialog(

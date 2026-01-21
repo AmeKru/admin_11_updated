@@ -1,3 +1,4 @@
+import 'package:admin_11_updated/utils/loading.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
@@ -67,10 +68,12 @@ class _AuthPageState extends State<AuthPage> {
     return Authenticator(
       authenticatorBuilder: (BuildContext context, AuthenticatorState state) {
         if (state.currentStep == AuthenticatorStep.signIn) {
-          return CustomScaffold(state: state, body: SignInForm());
-        } else {
-          return null;
+          return CustomScaffold(
+            state: state,
+            body: CustomSignInForm(state: state),
+          );
         }
+        return null;
       },
 
       child: MaterialApp(
@@ -196,6 +199,168 @@ class CustomScaffold extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// ////////////////////////////////////////////////////////////////////////////
+/// --- Customized login UI ---
+/// ////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// CustomSignInForm Class
+
+class CustomSignInForm extends StatefulWidget {
+  final AuthenticatorState state;
+  const CustomSignInForm({super.key, required this.state});
+
+  @override
+  State<CustomSignInForm> createState() => _CustomSignInFormState();
+}
+
+class _CustomSignInFormState extends State<CustomSignInForm> {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool signingIn = false;
+
+  Future<void> _signIn() async {
+    setState(() {
+      signingIn = true;
+    });
+    try {
+      final res = await Amplify.Auth.signIn(
+        username: _usernameController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      if (res.isSignedIn) {
+        if (kDebugMode) {
+          print("Signed in successfully");
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Sign in failed: $e");
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text(
+                  'Sign In failed. Check entered Email and Password.',
+                ),
+              ),
+            ),
+          );
+        }
+        setState(() {
+          signingIn = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.directions_bus,
+              color: Colors.black,
+              size: TextSizing.fontSizeHeading(context),
+            ),
+            SizedBox(width: TextSizing.fontSizeMiniText(context) * 0.5),
+            Text(
+              'MooBus Admin App',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                color: Colors.black,
+                fontSize: TextSizing.fontSizeHeading(context),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: TextSizing.fontSizeText(context)),
+
+        TextField(
+          controller: _usernameController,
+          decoration: InputDecoration(
+            labelText: 'Email',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                20.0,
+              ), // Adjust the value for roundness
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(
+                color: Colors.grey,
+              ), // Customize border color
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(
+                color: const Color(0xff014689),
+                width: 2.0,
+              ), // Customize when focused
+            ),
+          ),
+        ),
+
+        SizedBox(height: TextSizing.fontSizeText(context)),
+
+        TextField(
+          controller: _passwordController,
+          obscureText: true,
+          decoration: InputDecoration(
+            labelText: 'Password',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(
+                20.0,
+              ), // Adjust the value for roundness
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(
+                color: Colors.grey,
+              ), // Customize border color
+            ),
+
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(
+                color: const Color(0xff014689),
+                width: 2.0,
+              ), // Customize when focused
+            ),
+          ),
+        ),
+
+        SizedBox(height: TextSizing.fontSizeText(context)),
+
+        signingIn
+            ? LoadingScreen()
+            : ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+
+                  backgroundColor: const Color(0xff014689),
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: _signIn,
+                child: const Text('Sign In'),
+              ),
+      ],
     );
   }
 }

@@ -235,30 +235,83 @@ class _CustomSignInFormState extends State<CustomSignInForm> {
         username: _usernameController.text.trim(),
         password: _passwordController.text.trim(),
       );
+
       if (res.isSignedIn) {
         if (kDebugMode) {
           print("Signed in successfully");
+        }
+        // Navigate to home screen
+      } else {
+        final nextStep = res.nextStep;
+        switch (nextStep.signInStep) {
+          case AuthSignInStep.confirmSignInWithNewPassword:
+            _showNewPasswordDialog(nextStep);
+            break;
+          // handle other steps (MFA, reset password, etc.)
+          default:
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Unhandled step: ${nextStep.signInStep}")),
+            );
         }
       }
     } catch (e) {
       if (kDebugMode) {
         print("Sign in failed: $e");
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Center(
-                child: Text(
-                  'Sign In failed. Check entered Email and Password.',
-                ),
-              ),
-            ),
-          );
-        }
-        setState(() {
-          signingIn = false;
-        });
       }
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Sign In failed")));
+      }
+    } finally {
+      setState(() {
+        signingIn = false;
+      });
     }
+  }
+
+  void _showNewPasswordDialog(AuthNextSignInStep nextStep) {
+    final newPasswordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text("Set New Password"),
+          content: TextField(
+            controller: newPasswordController,
+            obscureText: true,
+            decoration: InputDecoration(labelText: "New Password"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                try {
+                  await Amplify.Auth.confirmSignIn(
+                    confirmationValue: newPasswordController.text.trim(),
+                  );
+                  Navigator.of(ctx).pop();
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Password updated, please sign in again"),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Failed to set new password: $e")),
+                    );
+                  }
+                }
+              },
+              child: Text("Submit"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

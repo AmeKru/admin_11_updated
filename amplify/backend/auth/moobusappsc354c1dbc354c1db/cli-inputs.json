@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "user14updated36572e51_identitypool_36572e51",
-    "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "user1436572e51",
-    "userPoolName": "user14updated36572e51_userpool_36572e51",
+    "identityPoolName": "moobusappsc354c1db_identitypool_c354c1db",
+    "allowUnauthenticatedIdentities": true,
+    "resourceNameTruncated": "moobusc354c1db",
+    "userPoolName": "moobusappsc354c1db_userpool_c354c1db",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -14,8 +14,8 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "-",
+    "emailVerificationMessage": "467389219{####}5647389",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -24,23 +24,27 @@
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
-    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientRefreshTokenValidity": "7",
     "userpoolClientWriteAttributes": [
       "email"
     ],
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "user1436572e51_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "moobusc354c1db_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "36572e51",
-    "resourceName": "user14updated36572e51",
+    "sharedId": "c354c1db",
+    "resourceName": "moobusappsc354c1dbc354c1db",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "default",
+    "useDefault": "manual",
+    "thirdPartyAuth": false,
     "usernameAttributes": [
       "email"
     ],
+    "userPoolGroups": false,
+    "adminQueries": false,
     "triggers": {},
+    "hostedUI": false,
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

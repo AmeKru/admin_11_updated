@@ -1,13 +1,14 @@
 {
-  "providers": [
-    "awscloudformation"
-  ],
-  "projectName": "user14updated",
+  "whyContinueWithGen1": "I am a current Gen 1 user",
+  "projectName": "moobusapps",
   "version": "3.1",
   "frontend": "flutter",
   "flutter": {
     "config": {
       "ResDir": "./lib/"
     }
-  }
+  },
+  "providers": [
+    "awscloudformation"
+  ]
 }
